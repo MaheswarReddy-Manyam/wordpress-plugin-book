@@ -102,5 +102,42 @@ class Wp_Book_Admin
         wp_enqueue_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/wp-book-admin.js', array( 'jquery' ), $this->version, false);
 
     }
+    //Register custom post type "book"
+    public function custom_post_type_book()
+    {
 
+        $labels = array(
+        'name'               => _x('Book', 'Post Type General Name', 'wp-book'),
+        'singular_name'      => _x('Book', 'Post Type Singular Name', 'wp-book'),
+        'add_new'            => __('Add New', 'wp-book'),
+        'add_new_item'       => __('Add New Book', 'wp-book'),
+        'edit_item'          => __('Edit Book', 'wp-book'),
+        'new_item'           => __('New Book', 'wp-book'),
+        'all_items'          => __('All Books', 'wp-book'),
+        'view_item'          => __('View Book', 'wp-book'),
+        'search_items'       => __('Search Books', 'wp-book'),
+        'not_found'          => __('No Books Found', 'wp-book'),
+        'not_found_in_trash' => __('No Books Found in Trash', 'wp-book'),
+        'menu_name'          => __('Book', 'wp-book'),
+        );
+
+        $args = array(
+        'labels'            => $labels,
+        'public'            => true,
+        'publicly_querable' => true,
+        'show_ui'           => true,
+        'show_in_menu'      => true,
+        'show_in_rest'      => true,
+        'query_var'         => true,
+        'rewrite'           => array( 'slug' => 'book' ),
+        'capability_type'   => 'post',
+        'has_archive'       => true,
+        'hieracrchical'     => false,
+        'menu_icon'         => 'dashicons-book',
+        'menu_position'     => 20,
+        'supports'          => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'comments', 'revisions' ),
+        );
+
+        register_post_type('Book', $args);
+    }
 }
