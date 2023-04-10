@@ -123,11 +123,11 @@ class Wp_Book_Admin
 
         $args = array(
         'labels'            => $labels,
-        'public'            => true,
         'publicly_querable' => true,
         'show_ui'           => true,
+        'public'            => true,
         'show_in_menu'      => true,
-        'show_in_rest'      => true,
+        // 'show_in_rest'      => true,
         'query_var'         => true,
         'rewrite'           => array( 'slug' => 'book' ),
         'capability_type'   => 'post',
@@ -139,5 +139,41 @@ class Wp_Book_Admin
         );
 
         register_post_type('Book', $args);
+    }
+
+    // create custom hierarchical category book
+    public function custom_category_book()
+    {
+
+        $labels = array(
+        'name'                       => _x('Book Categories', 'taxonomy general name', 'wp-book'), //phpcs:ignore
+        'singular_name'              => _x('Book Category', 'taxonomy singular name', 'wp-book'), //phpcs:ignore
+        'menu_name'                  => __('Book Category', 'wp-book'),
+        'all_items'                  => __('All Items', 'wp-book'),
+        'parent_item'                => __('Parent Item', 'wp-book'),
+        'parent_item_colon'          => __('Parent Item:', 'wp-book'),
+        'new_item_name'              => __('Add Book Category', 'wp-book'),
+        'add_new_item'               => __('Add New Book Category', 'wp-book'),
+        'edit_item'                  => __('Edit Book Category', 'wp-book'),
+        'update_item'                => __('Update Book Category', 'wp-book'),
+        'view_item'                  => __('View Book Category', 'wp-book'),
+        'search_items'               => __('Search Items', 'wp-book'),
+        'not_found'                  => __('Not Found', 'wp-book'),
+        'no_terms'                   => __('No items', 'wp-book'),
+        'items_list'                 => __('Items list', 'wp-book'),
+        'items_list_navigation'      => __('Items list navigation', 'wp-book'),
+        );
+
+        $args = array(
+        'labels'            => $labels,
+        'hierarchical'      => true,
+        'public'            => true,
+        'show_ui'           => true,
+        'show_admin_column' => true,
+        'show_in_nav_menus' => true,
+        'show_tagcloud'     => true,
+        );
+
+        register_taxonomy('Book Category', array('book'), $args);
     }
 }

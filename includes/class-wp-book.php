@@ -167,6 +167,9 @@ class Wp_Book
 
         // action hook for custom post type book
         $this->loader->add_action('init', $plugin_admin, 'custom_post_type_book');
+
+        // action hook for custom hierarchical taxonomy Book Category
+        $this->loader->add_action('init', $plugin_admin, 'custom_category_book');
     }
 
     /**
