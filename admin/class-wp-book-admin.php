@@ -213,4 +213,148 @@ class Wp_Book_Admin
 
         register_taxonomy('Book Tag', array("book"), $args);
     }
+
+    // Creates custom meta box
+    public function custom_metabox_books()
+    {
+        add_meta_box('custom-books-info', __('Book Information', 'wp-book'), array( $this, 'custom_books_info_function' ), array( 'book' ));
+    }
+
+    /**
+     * Shows custom metabox books and get values for wp_bookmeta (if any).
+     *
+     * @since 1.0.0
+     * @param object $post Contains all information about post
+     */
+    public function custom_books_info_function( $post )
+    {
+
+        // Use get_metadata to retrieve existing data from the database.
+        $get_book_metadata = get_metadata('book', $post->ID);
+        if (count($get_book_metadata) > 0 ) {
+            $author    = $get_book_metadata['author_name'][0];
+            $price     = $get_book_metadata['price'][0];
+            $publisher = $get_book_metadata['publisher'][0];
+            $year      = $get_book_metadata['year'][0];
+            $edition   = $get_book_metadata['edition'][0];
+            $url       = $get_book_metadata['url'][0];
+        } else {
+            $author    = '';
+            $price     = '';
+            $publisher = '';
+            $year      = '';
+            $edition   = '';
+            $url       = '';
+        }
+
+        // Add an nonce field so we can check for it later.
+        wp_nonce_field(basename(__FILE__), 'custom_books_info_nonce');
+        ?>
+
+        <!-- Display the meta box, using the current value. -->
+        <table class="form-table">
+            <tbody>
+                <tr>
+                    <th scope="row"><label for="wpb-custom-author-name"><?php _e('Author Name', 'wp-book')?></label></th>
+                    <td><input name="wpb-custom-author-name" type="text" id="wpb-custom-author-name" value="<?php esc_attr_e($author, 'wp-book'); ?>" placeholder="<?php _e('Author Name', 'wp-book') ?>" class="regular-text" autocomplete="off"></td>
+                </tr>
+                <tr>
+                    <th scope="row"><label for="wpb-custom-price"><?php _e('Book Price', 'wp-book')?></label></th>
+                    <td><input name="wpb-custom-price" type="text" id="wpb-custom-price" value="<?php esc_attr_e($price, 'wp-book'); ?>" placeholder="<?php _e('Book Price', 'wp-book') ?>" class="regular-text" autocomplete="off"></td>
+                </tr>
+                <tr>
+                    <th scope="row"><label for="wpb-custom-publisher"><?php _e('Publisher', 'wp-book')?></label></th>
+                    <td><input name="wpb-custom-publisher" type="text" id="wpb-custom-publisher" value="<?php esc_attr_e($publisher, 'wp-book'); ?>" placeholder="<?php _e('Publisher', 'wp-book') ?>" class="regular-text" autocomplete="off"></td>
+                </tr>
+                <tr>
+                    <th scope="row"><label for="wpb-custom-year"><?php _e('Year', 'wp-book')?></label></th>
+                    <td><input name="wpb-custom-year" type="number" id="wpb-custom-year" value="<?php esc_attr_e($year, 'wp-book'); ?>" placeholder="<?php _e('Year', 'wp-book') ?>" class="regular-text" autocomplete="off"></td>
+                </tr>
+                <tr>
+                    <th scope="row"><label for="wpb-custom-edition"><?php _e('Edition', 'wp-book')?></label></th>
+                    <td><input name="wpb-custom-edition" type="text" id="wpb-custom-edition" value="<?php esc_attr_e($edition, 'wp-book'); ?>" placeholder="<?php _e('Edition', 'wp-book') ?>" class="regular-text" autocomplete="off"></td>
+                </tr>
+                <tr>
+                    <th scope="row"><label for="wpb-custom-url"><?php _e('URL', 'wp-book')?></label></th>
+                    <td><input name="wpb-custom-url" type="url" id="wpb-custom-url" value="<?php echo esc_url($url, 'wp-book'); ?>" placeholder="<?php _e('URL eg. https://example.com', 'wp-book')?>" class="regular-text" autocomplete="off"></td>
+                </tr>
+            </tbody>
+        </table>
+        <?php
+    }
+
+    /**
+     * Stores all metadata of custom post type to custom table called wp_bookmeta
+     *
+     * @since 1.0.0
+     * @param integer $post_id Contains Post ID
+     * @param object  $post    Contains all information about post
+     */
+    public function save_custom_metabox_data( $post_id, $post )
+    {
+        /*
+        * We need to verify this came from the our screen and with proper authorization,
+        * because save_post can be triggered at other times.
+        */
+
+        // Check if our nonce is set or Verify that the nonce is valid.
+        if (! isset($_POST['custom_books_info_nonce']) || ! wp_verify_nonce($_POST['custom_books_info_nonce'], basename(__FILE__)) ) {
+            return $post_id;
+        }
+
+        $post_slug = 'book';
+
+        if ($post_slug != $post->post_type ) {
+            return;
+        }
+
+        $author = '';
+        if (isset($_POST['wpb-custom-author-name']) ) {
+            $author = sanitize_text_field($_POST['wpb-custom-author-name']);
+        } else {
+            $author = '';
+        }
+
+        $price = '';
+        if (isset($_POST['wpb-custom-price']) ) {
+            $price = sanitize_text_field($_POST['wpb-custom-price']);
+        } else {
+            $price = '';
+        }
+
+        $publisher = '';
+        if (isset($_POST['wpb-custom-publisher']) ) {
+            $publisher = sanitize_text_field($_POST['wpb-custom-publisher']);
+        } else {
+            $publisher = '';
+        }
+
+        $year = '';
+        if (isset($_POST['wpb-custom-year']) ) {
+            $year = sanitize_text_field($_POST['wpb-custom-year']);
+        } else {
+            $year = '';
+        }
+
+        $edition = '';
+        if (isset($_POST['wpb-custom-edition']) ) {
+            $edition = sanitize_text_field($_POST['wpb-custom-edition']);
+        } else {
+            $edition = '';
+        }
+
+        $url = '';
+        if (isset($_POST['wpb-custom-url']) ) {
+            $url = sanitize_text_field($_POST['wpb-custom-url']);
+        } else {
+            $url = '';
+        }
+
+        update_metadata('book', $post_id, 'author_name', $author);
+        update_metadata('book', $post_id, 'price', $price);
+        update_metadata('book', $post_id, 'publisher', $publisher);
+        update_metadata('book', $post_id, 'year', $year);
+        update_metadata('book', $post_id, 'edition', $edition);
+        update_metadata('book', $post_id, 'url', $url);
+    }
 }

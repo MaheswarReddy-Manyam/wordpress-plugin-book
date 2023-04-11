@@ -21,7 +21,6 @@
  */
 class Wp_Book_Activator
 {
-
     /**
      * Short Description. (use period)
      *

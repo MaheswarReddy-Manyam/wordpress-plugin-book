@@ -173,6 +173,12 @@ class Wp_Book
 
         // action hook for custom non-hierarchical taxonomy Book Tag
         $this->loader->add_action('init', $plugin_admin, 'custom_book_tag');
+
+        // action hook for custom metabox
+        $this->loader->add_action('add_meta_boxes', $plugin_admin, 'custom_metabox_books');
+
+        // action hook to store metadata of custom metabox book
+        $this->loader->add_action('save_post', $plugin_admin, 'save_custom_metabox_data', 10, 2);
     }
 
     /**
