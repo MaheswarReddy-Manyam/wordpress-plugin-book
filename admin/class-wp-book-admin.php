@@ -365,4 +365,73 @@ class Wp_Book_Admin
         update_metadata('book', $post_id, 'edition', $edition);
         update_metadata('book', $post_id, 'url', $url);
     }
+
+    // Custom Admin Settings page for Book
+    public function wpb_custom_book_admin_page()
+    {
+        add_menu_page('Booksmenu', __('Book Settings', 'wp-book'), 'manage_options', 'book-settings', array( $this, 'book_settings_page' ), 'dashicons-book-alt', 75);
+    }
+
+    // "Book Settings" menu callback function
+    public function book_settings_page()
+    {
+        ob_start();
+        ?>
+        <div class="wrap">
+        <?php
+        // add error/update messages
+
+        // check if the user have submitted the settings
+        // WordPress will add the "settings-updated" $_GET parameter to the url
+        if (isset($_GET['settings-updated']) ) {
+            // add settings saved message with the class of "updated"
+            add_settings_error('bookmenu_messages', 'bookmenu_message', __('Settings Saved', 'wp-book'), 'success' );
+        }
+        // show error/update messages
+        settings_errors('bookmenu_messages');
+        
+        ?>
+            <h2><?php esc_html_e('Book Settings', 'wp-book'); ?></h2>
+            <p><?php esc_html_e('Manages all the settings of book plugin', 'wp-book')?></p>
+
+            <form method="post" action="options.php">
+        <?php settings_fields('book_settings_group'); ?>
+                <table class="form-table">
+                    <tbody>
+                        <tr>
+                            <th scope="row"><label for="book_currency"><?php esc_html_e('Currency', 'wp-book'); ?></label></th>
+        <?php $currency_option = get_option('book_currency'); ?>
+                            <td>
+                                <select name="book_currency" id="book_currency" value="<?php echo get_option('book_currency'); ?>" class="regular-text">
+                                    <option value="INR" <?php selected($currency_option, 'INR'); ?> ><?php esc_html_e('INR', 'wp-book');?></option>
+                                    <option value="USD" <?php selected($currency_option, 'USD'); ?> ><?php esc_html_e('US Dollar', 'wp-book');?></option>
+                                    <option value="GBP" <?php selected($currency_option, 'GBP'); ?> ><?php esc_html_e('Great Britain Pound', 'wp-book');?></option>
+                                    <option value="AUD" <?php selected($currency_option, 'AUD'); ?> ><?php esc_html_e('Australia Dollar', 'wp-book');?></option>
+                                    <option value="JPY" <?php selected($currency_option, 'JPY'); ?> ><?php esc_html_e('Japan Yen', 'wp-book');?></option>
+                                    <option value="KWD" <?php selected($currency_option, 'KWD'); ?> ><?php esc_html_e('Kuwait Dinar', 'wp-book');?></option>                                   
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row"><label for="book_no_per_page"><?php esc_html_e('No. of Books(per page)', 'wp-book')?></label></th>
+                            <td><input type="text" class="regular-text" name="book_no_per_page" id="book_no_per_page" placeholder="No. of Books" value="<?php echo get_option('book_no_per_page'); ?>"></td>
+                        </tr>
+                        <tr>
+                            <td><input type="submit" value="Save Settings" class="button-primary"></td>
+                        </tr>
+                        <!-- <?php submit_button('Save Settings')?> -->
+                    </tbody>
+                </table>
+            </form>
+        </div>
+        <?php
+        echo ob_get_clean();
+    }
+
+    // Registers the settings group for each input field
+    public function register_book_settings()
+    {
+        register_setting('book_settings_group', 'book_currency');
+        register_setting('book_settings_group', 'book_no_per_page');
+    }
 }

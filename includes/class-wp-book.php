@@ -182,6 +182,12 @@ class Wp_Book
         
         // action hook for registering the custom table named bookmeta
         $this->loader->add_action('plugins_loaded', $plugin_admin, 'wpb_register_book_metatable'); //phpcs:disable
+
+        // action hook to add book admin page to admin menu
+        $this->loader->add_action('admin_menu',$plugin_admin, 'wpb_custom_book_admin_page');
+
+        // action hook for registering settings of book
+        $this->loader->add_action('admin_init',$plugin_admin, 'register_book_settings');
     }
 
     /**
