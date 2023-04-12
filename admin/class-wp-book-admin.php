@@ -217,9 +217,17 @@ class Wp_Book_Admin
     // Creates custom meta box
     public function custom_metabox_books()
     {
-        add_meta_box('custom-books-info', __('Book Information', 'wp-book'), array( $this, 'custom_books_info_function' ), array( 'book' ));
+        add_meta_box('custom-books-info', __('Book Information', 'wp-book'), array( $this, 'custom_books_info_function' ), array( 'book' ), 'normal', 'default'); 
     }
 
+     // creates custom meta table
+    public function wpb_register_book_metatable() 
+    {
+        global $wpdb;
+ 
+        // Registering the meta table
+        $wpdb->bookmeta = $wpdb->prefix . 'bookmeta';
+    }
     /**
      * Shows custom metabox books and get values for wp_bookmeta (if any).
      *
@@ -349,7 +357,7 @@ class Wp_Book_Admin
         } else {
             $url = '';
         }
-
+       
         update_metadata('book', $post_id, 'author_name', $author);
         update_metadata('book', $post_id, 'price', $price);
         update_metadata('book', $post_id, 'publisher', $publisher);
