@@ -128,6 +128,8 @@ class Wp_Book
          */
         include_once plugin_dir_path(dirname(__FILE__)) . 'public/class-wp-book-public.php';
 
+        include_once plugin_dir_path(dirname(__FILE__)) . 'custom-widgets/class-wp-book-custom-widget.php';
+
         $this->loader = new Wp_Book_Loader();
 
     }
@@ -208,6 +210,8 @@ class Wp_Book
         // Add shortcode named book to display book information
         add_shortcode('book', array($plugin_public, 'wpb_custom_shortcode'));
 
+        // action hook to display custom widget which shows books of selected category.
+		add_action( 'widgets_init', 'wpb_book_widget_init' );
     }
 
     /**

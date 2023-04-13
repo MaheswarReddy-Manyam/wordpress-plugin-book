@@ -207,6 +207,7 @@ class Wp_Book_Public
                 $book_metadata = get_metadata('book', get_the_ID());
                 $currency_value = get_metadata('book', get_the_ID(), 'price', true);
 
+                $book_metadata['author_name'][0]  = $book_metadata['author_name'][0] ? $book_metadata['author_name'][0] : 'N.A';
                 $book_metadata['publisher'][0] = $book_metadata['publisher'][0] ? $book_metadata['publisher'][0] : 'N.A';
                 $book_metadata['year'][0]      = $book_metadata['year'][0] ? $book_metadata['year'][0] : 'N.A';
                 $book_metadata['edition'][0]   = $book_metadata['edition'][0] ? $book_metadata['edition'][0] : 'N.A';
