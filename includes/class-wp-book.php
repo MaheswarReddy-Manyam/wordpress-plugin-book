@@ -205,6 +205,9 @@ class Wp_Book
         $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_styles');
         $this->loader->add_action('wp_enqueue_scripts', $plugin_public, 'enqueue_scripts');
 
+        // Add shortcode named book to display book information
+        add_shortcode('book', array($plugin_public, 'wpb_custom_shortcode'));
+
     }
 
     /**

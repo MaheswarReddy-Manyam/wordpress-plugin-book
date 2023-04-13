@@ -385,7 +385,7 @@ class Wp_Book_Admin
         // WordPress will add the "settings-updated" $_GET parameter to the url
         if (isset($_GET['settings-updated']) ) {
             // add settings saved message with the class of "updated"
-            add_settings_error('bookmenu_messages', 'bookmenu_message', __('Settings Saved', 'wp-book'), 'success' );
+            add_settings_error('bookmenu_messages', 'bookmenu_message', __('Settings Saved', 'wp-book'), 'success');
         }
         // show error/update messages
         settings_errors('bookmenu_messages');
@@ -408,7 +408,7 @@ class Wp_Book_Admin
                                     <option value="GBP" <?php selected($currency_option, 'GBP'); ?> ><?php esc_html_e('Great Britain Pound', 'wp-book');?></option>
                                     <option value="AUD" <?php selected($currency_option, 'AUD'); ?> ><?php esc_html_e('Australia Dollar', 'wp-book');?></option>
                                     <option value="JPY" <?php selected($currency_option, 'JPY'); ?> ><?php esc_html_e('Japan Yen', 'wp-book');?></option>
-                                    <option value="KWD" <?php selected($currency_option, 'KWD'); ?> ><?php esc_html_e('Kuwait Dinar', 'wp-book');?></option>                                   
+                                    <option value="CNY" <?php selected($currency_option, 'CNY'); ?> ><?php esc_html_e('Chinese Yuan', 'wp-book');?></option>                                   
                                 </select>
                             </td>
                         </tr>
