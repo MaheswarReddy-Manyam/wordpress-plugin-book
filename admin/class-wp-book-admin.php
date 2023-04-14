@@ -434,4 +434,35 @@ class Wp_Book_Admin
         register_setting('book_settings_group', 'book_currency');
         register_setting('book_settings_group', 'book_no_per_page');
     }
+
+    // Create a custom widget for dashboard
+    public function custom_dashboard_widget()
+    {
+        wp_add_dashboard_widget('book_widget', __('Top 5 Book Categories', 'wp-book'), array( $this, 'custom_dashboard_helper' ), 'null', 'null', 'column3');
+    }
+
+    // Provides Top 5 categories of book post type based on their count
+    function custom_dashboard_helper()
+    {
+        global $wpdb;
+        $get_category_term_ids   = $wpdb->get_col("SELECT term_id FROM `wp_term_taxonomy` WHERE taxonomy = 'Book Category' ORDER BY count DESC LIMIT 5");
+        $top_category_name = array();
+        $top_category_slug = array();
+        foreach ( $get_category_term_ids as $id ) {
+            $get_term = $wpdb->get_row("SELECT name, slug FROM wp_terms WHERE term_id = $id", 'ARRAY_A');
+            array_push($top_category_name, $get_term['name']);
+            array_push($top_category_slug, $get_term['slug']);
+        }
+        ?>
+        <ol>
+        <?php
+        for ( $i = 0; $i < count($top_category_name); $i++ ) {
+            ?>
+            <li style='font-size:15px;'> <a href=" <?php echo esc_url( get_site_url() ); ?>/wp-admin/edit.php?post_type=book&book-category=<?php echo esc_attr( $top_category_slug[ $i ] ); ?>" target='_blank'><?php esc_attr_e($top_category_name[ $i ], 'wp-book'); ?></li>
+            <?php
+        }
+        ?>
+        </ol>
+        <?php
+    }
 }
